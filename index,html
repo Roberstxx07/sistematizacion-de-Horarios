@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingreso de Datos</title>
+  <style>
+    /* Estilos generales */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f4f8;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #007BFF;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* Estilo del contenedor del formulario */
+    .form-section {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-section input, .form-section select {
+      width: calc(50% - 30px);
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .form-section select {
+      width: calc(30% - 30px);
+      margin-right: 20px;
+    }
+
+    .form-section div {
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Tabla */
+    table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    th {
+      background-color: #007BFF;
+      color: white;
+      text-transform: uppercase;
+    }
+
+    td {
+      background-color: #f9f9f9;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #f1f1f1;
+    }
+
+    /* Estilos responsivos */
+    @media (max-width: 768px) {
+      .form-section input, .form-section select {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .form-section div {
+        display: flex;
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+      }
+
+      table {
+        width: 100%;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Ingresar Datos de los Maestros</h1>
+
+  <div class="form-section">
+    <label for="nombre">Nombre del maestro:</label>
+    <input type="text" id="nombre" placeholder="Nombre del maestro" required>
+
+    <label for="tipo">Tipo de maestro:</label>
+    <select id="tipo">
+      <option value="tiempo_completo">Tiempo completo</option>
+      <option value="contrato_manana">Contrato mañana</option>
+      <option value="contrato_tarde">Contrato tarde</option>
+    </select>
+
+    <label for="asignatura">Asignatura:</label>
+    <input type="text" id="asignatura" placeholder="Asignatura" required>
+
+    <div>
+      <label for="dia1">Primer día:</label>
+      <select id="dia1">
+        <option value="Lunes">Lunes</option>
+        <option value="Martes">Martes</option>
+        <option value="Miércoles">Miércoles</option>
+        <option value="Jueves">Jueves</option>
+        <option value="Viernes">Viernes</option>
+      </select>
+
+      <label for="horario1">Horario (día 1):</label>
+      <input type="text" id="horario1" placeholder="Ej: 8-10am" required>
+    </div>
+
+    <div>
+      <label for="dia2">Segundo día:</label>
+      <select id="dia2">
+        <option value="Lunes">Lunes</option>
+        <option value="Martes">Martes</option>
+        <option value="Miércoles">Miércoles</option>
+        <option value="Jueves">Jueves</option>
+        <option value="Viernes">Viernes</option>
+      </select>
+
+      <label for="horario2">Horario (día 2):</label>
+      <input type="text" id="horario2" placeholder="Ej: 10-12pm" required>
+    </div>
+
+    <button onclick="agregarMaestro()">Agregar Maestro</button>
+  </div>
+
+  <button onclick="generarHorario()">Generar Horario</button>
+
+  <h2>Horario Generado</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Maestro</th>
+        <th>Tipo</th>
+        <th>Asignatura</th>
+        <th>Día 1</th>
+        <th>Horario 1</th>
+        <th>Día 2</th>
+        <th>Horario 2</th>
+      </tr>
+    </thead>
+    <tbody id="horario-table">
+      <!-- Aquí se llenarán las filas del horario -->
+    </tbody>
+  </table>
+
+  <script>
+    const maestros = [];
+
+    // Función para agregar maestro
+    function agregarMaestro() {
+      const nombre = document.getElementById('nombre').value;
+      const tipo = document.getElementById('tipo').value;
+      const asignatura = document.getElementById('asignatura').value;
+      const dia1 = document.getElementById('dia1').value;
+      const horario1 = document.getElementById('horario1').value;
+      const dia2 = document.getElementById('dia2').value;
+      const horario2 = document.getElementById('horario2').value;
+
+      if (nombre && asignatura && horario1 && horario2 && dia1 !== dia2) {
+        maestros.push({ nombre, tipo, asignatura, dia1, horario1, dia2, horario2 });
+
+        // Limpiamos los campos del formulario
+        document.getElementById('nombre').value = '';
+        document.getElementById('asignatura').value = '';
+        document.getElementById('horario1').value = '';
+        document.getElementById('horario2').value = '';
+        document.getElementById('dia1').selectedIndex = 0;
+        document.getElementById('dia2').selectedIndex = 0;
+
+        alert('Maestro agregado exitosamente');
+      } else {
+        alert('Por favor, completa todos los campos correctamente y asegúrate de que los días no sean iguales');
+      }
+    }
+
+    // Función para generar el horario
+    function generarHorario() {
+      const tabla = document.getElementById('horario-table');
+      tabla.innerHTML = ''; // Limpiamos la tabla antes de llenar los datos
+
+      maestros.forEach(maestro => {
+        let fila = document.createElement('tr');
+
+        let tdNombre = document.createElement('td');
+        tdNombre.textContent = maestro.nombre;
+
+        let tdTipo = document.createElement('td');
+        tdTipo.textContent = maestro.tipo.replace('_', ' ').toUpperCase();
+
+        let tdAsignatura = document.createElement('td');
+        tdAsignatura.textContent = maestro.asignatura;
+
+        let tdDia1 = document.createElement('td');
+        tdDia1.textContent = maestro.dia1;
+
+        let tdHorario1 = document.createElement('td');
+        tdHorario1.textContent = maestro.horario1;
+
+        let tdDia2 = document.createElement('td');
+        tdDia2.textContent = maestro.dia2;
+
+        let tdHorario2 = document.createElement('td');
+        tdHorario2.textContent = maestro.horario2;
+
+        fila.appendChild(tdNombre);
+        fila.appendChild(tdTipo);
+        fila.appendChild(tdAsignatura);
+        fila.appendChild(tdDia1);
+        fila.appendChild(tdHorario1);
+        fila.appendChild(tdDia2);
+        fila.appendChild(tdHorario2);
+
+        tabla.appendChild(fila);
+      });
+
+      if (maestros.length === 0) {
+        alert('No hay maestros agregados');
+      }
+    }
+  </script>
+</body>
+</html>
