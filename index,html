@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ingreso de Datos</title>
   <style>
-    /* Estilos generales */
     body {
       font-family: 'Arial', sans-serif;
       background-color: #f0f4f8;
@@ -17,10 +16,8 @@
     h1, h2 {
       text-align: center;
       color: #007BFF;
-      font-family: 'Arial', sans-serif;
     }
 
-    /* Estilo del contenedor del formulario */
     .form-section {
       background-color: white;
       border-radius: 10px;
@@ -46,11 +43,6 @@
       box-sizing: border-box;
     }
 
-    .form-section select {
-      width: calc(30% - 30px);
-      margin-right: 20px;
-    }
-
     .form-section div {
       margin-bottom: 10px;
     }
@@ -70,13 +62,10 @@
       background-color: #0056b3;
     }
 
-    /* Tabla */
     table {
       width: 100%;
-      max-width: 1000px;
       margin: 20px auto;
       border-collapse: collapse;
-      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     th, td {
@@ -100,7 +89,6 @@
       background-color: #f1f1f1;
     }
 
-    /* Estilos responsivos */
     @media (max-width: 768px) {
       .form-section input, .form-section select {
         width: 100%;
@@ -131,13 +119,6 @@
   <div class="form-section">
     <label for="nombre">Nombre del maestro:</label>
     <input type="text" id="nombre" placeholder="Nombre del maestro" required>
-
-    <label for="tipo">Tipo de maestro:</label>
-    <select id="tipo">
-      <option value="tiempo_completo">Tiempo completo</option>
-      <option value="contrato_manana">Contrato mañana</option>
-      <option value="contrato_tarde">Contrato tarde</option>
-    </select>
 
     <label for="asignatura">Asignatura:</label>
     <input type="text" id="asignatura" placeholder="Asignatura" required>
@@ -179,13 +160,13 @@
   <table>
     <thead>
       <tr>
-        <th>Maestro</th>
-        <th>Tipo</th>
         <th>Asignatura</th>
-        <th>Día 1</th>
-        <th>Horario 1</th>
-        <th>Día 2</th>
-        <th>Horario 2</th>
+        <th>Lunes</th>
+        <th>Martes</th>
+        <th>Miércoles</th>
+        <th>Jueves</th>
+        <th>Viernes</th>
+        <th>Maestro</th>
       </tr>
     </thead>
     <tbody id="horario-table">
@@ -196,10 +177,8 @@
   <script>
     const maestros = [];
 
-    // Función para agregar maestro
     function agregarMaestro() {
       const nombre = document.getElementById('nombre').value;
-      const tipo = document.getElementById('tipo').value;
       const asignatura = document.getElementById('asignatura').value;
       const dia1 = document.getElementById('dia1').value;
       const horario1 = document.getElementById('horario1').value;
@@ -207,9 +186,8 @@
       const horario2 = document.getElementById('horario2').value;
 
       if (nombre && asignatura && horario1 && horario2 && dia1 !== dia2) {
-        maestros.push({ nombre, tipo, asignatura, dia1, horario1, dia2, horario2 });
+        maestros.push({ nombre, asignatura, horarios: { [dia1]: horario1, [dia2]: horario2 } });
 
-        // Limpiamos los campos del formulario
         document.getElementById('nombre').value = '';
         document.getElementById('asignatura').value = '';
         document.getElementById('horario1').value = '';
@@ -223,42 +201,27 @@
       }
     }
 
-    // Función para generar el horario
     function generarHorario() {
       const tabla = document.getElementById('horario-table');
-      tabla.innerHTML = ''; // Limpiamos la tabla antes de llenar los datos
+      tabla.innerHTML = '';
 
       maestros.forEach(maestro => {
         let fila = document.createElement('tr');
 
-        let tdNombre = document.createElement('td');
-        tdNombre.textContent = maestro.nombre;
-
-        let tdTipo = document.createElement('td');
-        tdTipo.textContent = maestro.tipo.replace('_', ' ').toUpperCase();
-
         let tdAsignatura = document.createElement('td');
         tdAsignatura.textContent = maestro.asignatura;
-
-        let tdDia1 = document.createElement('td');
-        tdDia1.textContent = maestro.dia1;
-
-        let tdHorario1 = document.createElement('td');
-        tdHorario1.textContent = maestro.horario1;
-
-        let tdDia2 = document.createElement('td');
-        tdDia2.textContent = maestro.dia2;
-
-        let tdHorario2 = document.createElement('td');
-        tdHorario2.textContent = maestro.horario2;
-
-        fila.appendChild(tdNombre);
-        fila.appendChild(tdTipo);
         fila.appendChild(tdAsignatura);
-        fila.appendChild(tdDia1);
-        fila.appendChild(tdHorario1);
-        fila.appendChild(tdDia2);
-        fila.appendChild(tdHorario2);
+
+        const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+        dias.forEach(dia => {
+          let tdDia = document.createElement('td');
+          tdDia.textContent = maestro.horarios[dia] || '';  // Si no hay clase ese día, deja vacío
+          fila.appendChild(tdDia);
+        });
+
+        let tdNombre = document.createElement('td');
+        tdNombre.textContent = maestro.nombre;
+        fila.appendChild(tdNombre);
 
         tabla.appendChild(fila);
       });
@@ -270,3 +233,4 @@
   </script>
 </body>
 </html>
+
